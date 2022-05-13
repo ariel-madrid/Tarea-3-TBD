@@ -5,6 +5,6 @@ import tarea3.tbd.models.*;;
 public interface RegionRepository {
     public int countRegions();
     public List<Region> getAllRegions();
-    public Dog createRegion(Region region);
+    public Region createRegion(Region region);
     public String getJson();
 }
