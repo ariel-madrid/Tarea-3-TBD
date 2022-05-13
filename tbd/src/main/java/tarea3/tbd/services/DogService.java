@@ -1,7 +1,6 @@
-package cl.tbd.ejemplo1.services;
-
-import cl.tbd.ejemplo1.models.Dog;
-import cl.tbd.ejemplo1.repositories.DogRepository;
+package tarea3.tbd.services;
+import tarea3.tbd.repositories.DogRepository;
+import tarea3.tbd.models.*;
 
 import org.postgis.Geometry;
 import org.postgis.PGgeometry;
@@ -19,7 +18,7 @@ import java.util.List;
 @RestController
 public class DogService {
 
-    private final DogRepository dogRepository;
+    private DogRepository dogRepository;
 
     DogService(DogRepository dogRepository) {
         this.dogRepository = dogRepository;

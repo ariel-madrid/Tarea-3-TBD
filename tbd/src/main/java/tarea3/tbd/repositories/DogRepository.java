@@ -1,6 +1,6 @@
-package cl.tbd.ejemplo1.repositories;
+package tarea3.tbd.repositories;
 import java.util.List;
-import cl.tbd.ejemplo1.models.Dog;
+import tarea3.tbd.models.*;;
 
 public interface DogRepository {
     public int countDogs();

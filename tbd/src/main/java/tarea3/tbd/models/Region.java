@@ -1,7 +1,4 @@
-package cl.tbd.ejemplo1.models;
-
-import org.postgis.PGgeometry;
-import org.postgis.Point;
+package tarea3.tbd.models;
 
 public class Region {
     private int id;
