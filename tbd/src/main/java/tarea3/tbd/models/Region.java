@@ -1,7 +1,7 @@
 package tarea3.tbd.models;
 
 public class Region {
-    private int id;
+    private int gid;
     private String nom_reg;
     private String nom_prov;
     private String cod_com;
@@ -17,7 +17,7 @@ public class Region {
 
     
     public int getId() {
-        return id;
+        return gid;
     }
     public double getLatitude() {
         return latitude;
@@ -91,8 +91,8 @@ public class Region {
     public void setNom_reg(String nom_reg) {
         this.nom_reg = nom_reg;
     }
-    public void setId(int id) {
-        this.id = id;
+    public void setId(int gid) {
+        this.gid = gid;
     }
 }
 
