@@ -13,13 +13,16 @@
             </div>
             <div v-if="combobox" class="origin-top-right absolute right-7 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" tabindex="-1">
                 <div class="py-1" role="none">
-                <button @click="getRegions(region.id)" class="w-full text-gray-700 block px-4 py-2 text-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500" v-for="region in regions" :key="region.id">{{region.name}}</button>
+                <button @click="getRegions(region)" class="w-full text-gray-700 block px-4 py-2 text-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500" 
+                        v-for="region in regions" :key="region.id">
+                        {{ region.name }}
+                </button>
                 </div>
             </div>
         </div>
 
         <div class="mt-10 flex justify-center">
-            Aqui va el mapa
+            <p>{{ `Hay ${nPerros} perros en ${regionSeleccionada}` }}</p>
         </div>
 
         <button @click="emit" class="bg-blue-500 rounded mt-10 w-full text-gray-700 block px-4 py-2 text-sm hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">Volver</button>
@@ -33,6 +36,8 @@ import axios from "axios";
 export default {
     data() {
         return {
+            regionSeleccionada: "(región no seleccionada)",
+            nPerros: 0,
             combobox: false,
             regions: [{name:"Region Metropolitana", id:1},{name:"Tarapacá", id:2},{name:"Antofagasta", id:3},{name:"Atacama y Coquimbo", id:4}	],
             value: false
@@ -52,9 +57,14 @@ export default {
         },
         async getRegions(value)
         {
+            this.regionSeleccionada = value.name
+
             //Aqui debemos hacer un get region
-            alert(value)
+            alert(value.id)
             this.showCombobox()
+
+            // Setear respuesta de número de perros
+            this.nPerros = 3333333;
         },
         emit()
         {
