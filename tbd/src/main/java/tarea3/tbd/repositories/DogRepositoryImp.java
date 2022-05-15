@@ -68,4 +68,21 @@ public class DogRepositoryImp implements DogRepository {
         "FROM division_regional_4326 AS t WHERE t.gid = 5;";
         return null;
     }
+
+    @Override
+    public List<Dog> getNNearDogs(int dogId, int n) {
+        final String dogQuery = "(SELECT * FROM dogs WHERE id = " + dogId + ") as requested_dog";
+        final String query = "SELECT ST_Distance(requested_dog.geom, dogs.geom) as distance" +
+                             "FROM " + dogQuery + ", dogs" +
+                             "ORDER BY distance" + 
+                             "LIMIT " + n;
+
+        try(Connection conn = sql2o.open()){
+            return conn.createQuery(query)
+                    .executeAndFetch(Dog.class);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
 }
