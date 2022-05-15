@@ -24,6 +24,11 @@ public class RegionRepositoryImp implements RegionRepository {
         return total;
     }
 
+    /**
+     * Se devuelve una lista con los atributos más importantes de una región.
+     * En este caso, como existe una columna especial de geometría, para 
+     * añadir esta región al mapa se pide que se utilice el método getJson().
+     */
     @Override
     public List<Region> getAllRegions() {
         try(Connection conn = sql2o.open()){
@@ -38,30 +43,35 @@ public class RegionRepositoryImp implements RegionRepository {
 
     @Override
     public Region createRegion(Region region) {
-        // try(Connection conn = sql2o.open()){
-        //     String query = "INSERT INTO DOG (name, location) " +
-        //     "VALUES (:dogName, ST_GeomFromText(:point, 4326))";
-
-        //     String point = "POINT("+dog.getLongitude()+" "+dog.getLatitude()+")";
-        //     System.out.println("point: "+point);
-            
-        //     int insertedId = (int) conn.createQuery(query, true)
-        //             .addParameter("dogName", dog.getName())
-        //             .addParameter("point", point)
-        //             .executeUpdate().getKey();
-        //     dog.setId(insertedId);
-        //     return dog;        
-        // }catch(Exception e){
-        //     System.out.println(e.getMessage());
-        //     return null;
-        // }
+        // Creo que no es necesario crear la región
         return null;
     }
 
+    /**
+     * Obtiene un geoJSON de la tabla especial 'division_regional'
+     * georeferenciada desde el campo 'geom' que es del tipo 'Multipolygon'
+     * utilizando funciones de postGIS.
+     */
     @Override
     public String getJson() {
-        // TODO Auto-generated method stub
+        final String query = "SELECT json_build_object("+
+            "'type', 'FeatureCollection',"+
+            "'features', json_agg(ST_AsGeoJSON(t.geom)::json)"+
+            ")"+
+        "FROM division_regional AS t;";
+
+        try(Connection conn = sql2o.open()){
+            
+            return conn.createQuery(query)
+                    .executeAndFetch(String.class)
+                    .get(0);
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
         return null;
+        
     }
 
 
