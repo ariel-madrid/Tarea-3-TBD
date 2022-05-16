@@ -1,11 +1,13 @@
 <template>
-    <div class="grid grid-cols-1 bg-white shadow-sm p-5 rounded w-80 ml-2 border border-gray-200 place-content-center">
+    <div class="grid grid-cols-1 bg-white shadow-sm p-5 rounded ml-2 border border-gray-200 place-content-center">
      
 
         <div class="mt-10 flex flex-col justify-center">
             <p>{{ message }}</p>
 
-            <label for="nDogs">Seleccione la cantidad N de perros a obtener:</label>
+            <div id="mapid3"></div>
+            <p>El perro seleccionado es {{ selectedPoint.name }} con id {{ selectedPoint.id }}</p>
+            <label for="nDogs">Seleccione la cantidad "N" de perros más cercanos a obtener:</label>
             <input class="border-solid border-2" 
                    v-model="n"
                    id="nDogs" type="number" value="1"/>
@@ -30,9 +32,22 @@
 </template>
 
 <script>
+
+import "leaflet/dist/leaflet"; 
+import "leaflet/dist/leaflet.css";
+var icon = require("leaflet/dist/images/marker-icon.png"); 
+var LeafIcon = L.Icon.extend({
+  options: { iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [-3, -41] },
+});
+var myIcon = new LeafIcon({ iconUrl: icon });
+
+
 import axios from "axios";
 
 export default {
+    props: {
+        selectedPoint: { type: Object },
+    },
     data() {
         return {
             dogId: null,
@@ -43,8 +58,7 @@ export default {
     },
     methods: {
         async getNNearDogs(){
-            this.dogId = 1;
-            this.n = 2;
+            this.dogId = this.selectedPoint.id;
             try {
                 let response = await axios.get("http://localhost:8080/dogs/nneardogs", {
                     params: {dogId: this.dogId, n: this.n}
@@ -59,6 +73,22 @@ export default {
             
             this.$emit('close', true)
         }
-    }
+    },
+    mounted() {
+        this.mymap = L.map("mapid3").setView([-33.456, -70.648], 7);
+        //Se definen los mapas de bits de OSM
+        L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
+        attribution:
+            '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 10,
+        }).addTo(this.mymap);
+    },
 }
 </script>
+
+<style>
+    #mapid3 {
+        width: 400px;
+        aspect-ratio: 16/9;
+    }
+</style>
