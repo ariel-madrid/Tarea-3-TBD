@@ -14,7 +14,7 @@
         <PerrosRegion @close="cerrar"/>
       </div>
       <div v-if="toggleModal==1" id="defaultModal" class="fixed overflow-x-hidden overflow-y-auto inset-0 flex justify-center items-center z-20">
-        <NPerros :selectedPoint="{id: 2, name: 'puntopasado'}" @close="cerrar"/>
+        <NPerros :selectedPoint="selectedPoint" @close="cerrar"/>
       </div>
       <div v-if="toggleModal==2" id="defaultModal" class="fixed overflow-x-hidden overflow-y-auto inset-0 flex justify-center items-center z-20">
         <PerrosRadio @close="cerrar"/>
@@ -29,7 +29,8 @@
         {{ point }} 
         <input type="text" v-model="name" placeholder="nombre" />
         <button type="button" @click="crearPerro()">Crear</button>
-      <div>
+        <p>{{ selectedPoint }}</p>
+      </div>
     </div>
     
   </div>
@@ -59,15 +60,59 @@ export default {
             close: false,
             latitude: null, // Datos para el nuevo punto
             longitude: null,
+            points: [], // Arreglo de puntos en el lado del cliente
+            name: "",
+            selectedPoint: {}, // Punto que se pasa a componente NPerros
         };
     },
     methods: {
-        dataFromChild(value){
-            this.toggleModal = value
-        },
-        cerrar(){
-          this.toggleModal = 3
+      crearPerro(){
+      //Crear un nuevo punto
+      // this.message = "";
+
+      // realizar llamada para crear un nuevo perro
+
+      let newPoint = { 
+        name: this.name,
+        latitude: this.latitude,
+        longitude: this.longitude,
+      };
+
+      this.points.push(newPoint);
+
+      let p = [newPoint.latitude, newPoint.longitude];
+      let marker = L.marker(p, { icon: myIcon }) //se define el ícono del marcador
+          .bindPopup(newPoint.name)
+          .on('click', (e) => this.recuperarPunto(e)); //Se agrega un popup con el nombre
+
+      marker.addTo(this.mymap);
+
+
+      // this.message = `${this.name} fue creado con éxito`;
+      this.name = "";
+
+
+      },
+      dataFromChild(value){
+        this.toggleModal = value
+      },
+      cerrar(){
+        this.toggleModal = 3
+      },
+      recuperarPunto(e){
+        let selectedLatlng = e.latlng;
+
+        let lat =  selectedLatlng.lat;
+        let long = selectedLatlng.lng;
+
+        for(let p of this.points){
+          console.log(p.id)
+          if( p.latitude == lat && p.longitude == long ){
+            this.selectedPoint = p;
+            return;
+          }
         }
+      }
     },
     computed: {
       point(){
@@ -82,6 +127,8 @@ export default {
       },
     },
     mounted(){
+      let _this = this;
+
       // Realizar llamada para obtener todos los perros aquí
       // let dogs = llamar servicio
       // Añadir un marcador por cada perro
@@ -109,6 +156,11 @@ export default {
             '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
         maxZoom: 10,
       }).addTo(this.mymap);
+
+      this.mymap.on("click", function (e) {
+        _this.latitude = e.latlng.lat;
+        _this.longitude = e.latlng.lng;
+      });
 
       // añadir regiones
       // hacer llamada para obtenerlas
