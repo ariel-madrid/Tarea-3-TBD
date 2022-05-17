@@ -81,10 +81,17 @@ public class DogService {
      * Obtener los N perros más cercanos a un perro seleccionado.
      * @return
      */
-    @GetMapping("/dogs/rneardogs")
-    public List<Dog> getRNearDogs(@RequestParam Dog dog, @RequestParam int r){
-
-        return dogRepository.getRNearDogs(dog, r);
+    @PostMapping(value = "/dogs/rneardogs")
+    @ResponseBody
+    public List<Dog> getRNearDogs(@RequestBody Dog dog){
+        
+        try {
+            List<Dog> value = dogRepository.getRNearDogs(dog);
+            return value;
+        } catch (Exception e) {
+            System.out.println("Error :" + e.getMessage());
+            return null;
+        }
     }
         
                                     

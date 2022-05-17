@@ -89,22 +89,24 @@ public class DogRepositoryImp implements DogRepository {
     }
 
     @Override
-    public List<Dog> getRNearDogs(Dog dog, int r){
+    public List<Dog> getRNearDogs(Dog dog){
         
-        String point = "("+dog.getLongitude()+" "+dog.getLatitude()+")";
+        try(Connection conn = sql2o.open()){
+            
+            String dogQuery = " (SELECT id, name, latitude, longitude, radio FROM dog) as tabla";
 
-        final String query = "SELECT * FROM dog"+
-                                " WHERE ST_DWithin("+ 
+            String point = "("+dog.getLongitude()+", "+dog.getLatitude()+")";
+
+            String query = "SELECT * FROM" + dogQuery + " "+
+                                    " WHERE ST_DWithin("+ 
                                     " ST_MakePoint(longitude, latitude)::geography,"+
                                     " ST_MakePoint"+ point + "::geography,"+
-                                    r + 
-                             ") AND id != " + dog.getId() + ";";
+                                    dog.getRadio() + 
+                                    ") AND id != " + dog.getId() + ";";
         
-                             System.out.println(query);
+            System.out.println(query);
 
-        try(Connection conn = sql2o.open()){
-            return conn.createQuery(query)
-                    .executeAndFetch(Dog.class);
+            return conn.createQuery(query).executeAndFetch(Dog.class);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;

@@ -9,6 +9,7 @@ public class Dog {
     private double longitude;
     private double latitude;
     private double cod_regi;
+    private Integer radio;
     //private PGgeometry location;
 
     public Integer getId() {
@@ -22,6 +23,14 @@ public class Dog {
     public void setLocation(PGgeometry location) {
         this.location = location;
     } */
+
+    public Integer getRadio() {
+        return radio;
+    }
+
+    public void setRadio(Integer radio) {
+        this.radio = radio;
+    }
 
     public void setCodRegi(double cod_regi)
     {

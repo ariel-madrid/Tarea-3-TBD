@@ -96,7 +96,6 @@ export default {
           if (flag == 0) {
             try {
               newPoint.id = count+1;
-              alert(newPoint.latitude+" "+newPoint.longitude)
               newPoint.lat = newPoint.latitude;
               newPoint.long = newPoint.longitude;
               await this.$axios

@@ -55,12 +55,13 @@ export default {
     },
     methods: {
         async getRNearDogs(){
+            this.selectedPoint.radio = this.r;
             console.log(this.selectedPoint);
-        
             try {
-                let response = await axios.get("http://localhost:8080/dogs/rneardogs", this.selectedPoint, this.r)
-                    
-                } catch (error) {
+                let response = await axios.post("http://localhost:8080/dogs/rneardogs", this.selectedPoint)
+                response = response.data
+                console.log(response)
+            } catch (error) {
                 console.log('error', error);
                 this.message = 'Ocurrió un error'
             } 
