@@ -80,16 +80,18 @@ export default {
         let response = await this.$axios.get("http://localhost:8080/dogs");
         this.temp = response.data;
         var flag = 0;
+        var count = 0;
         for (var i = 0; i < this.temp.length; i++) {
           if (this.temp[i].name === newPoint.name) {
             alert("Ya existe un perro con este nombre en la base de datos");
             i = this.temp.length;
             flag = 1;
           }
+          count++;
         }
         if (flag == 0) {
-           
           try {
+            newPoint.id = count+1;
             await this.$axios
               .post("http://localhost:8080/nuevodog", newPoint)
               .then((res) => res.data)

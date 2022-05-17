@@ -29,18 +29,14 @@ public class DogService {
 
     @GetMapping("/dogs")
     public List<Dog> getAllDogs() {
-        System.out.println("getAllDogs()");
         try {
             List<Dog> dogs = dogRepository.getAllDogs();
-            System.out.println("1");
             for (Dog d : dogs) {
-                System.out.println("ID: " + d.getId());
                 /*PGgeometry geom = d.getLocation();
                 Geometry geometry = geom.getGeometry();
                 
                 System.out.println("Point: "+ geometry.getValue());*/
             }
-            System.out.println("2");
             return dogs;
         } catch (Exception e) {
             System.out.println("Error :" + e.getMessage());
@@ -67,10 +63,8 @@ public class DogService {
      public Dog createDog(@RequestBody Dog dog) 
      {  
         System.out.println(dog.getName());
-        return dogRepository.createDog(dog);
-        
+        return dogRepository.createDog(dog);  
      }
-
 
     /**
      * Obtener los N perros más cercanos a un perro seleccionado.
