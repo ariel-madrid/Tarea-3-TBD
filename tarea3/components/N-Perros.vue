@@ -75,6 +75,12 @@ export default {
         }
     },
     mounted() {
+
+        if(this.selectedPoint.id === undefined){
+            alert("Debe seleccionar un perro");
+            this.emit();
+        } 
+
         this.mymap = L.map("mapid3").setView([-33.456, -70.648], 7);
         //Se definen los mapas de bits de OSM
         L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {

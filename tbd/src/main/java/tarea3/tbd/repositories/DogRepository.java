@@ -9,4 +9,5 @@ public interface DogRepository {
     public String getJson();
 
     public List<Dog> getNNearDogs(int dogId, int n);
+    public List<Dog> getRNearDogs(int dogId, int r);
 }

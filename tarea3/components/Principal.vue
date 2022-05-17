@@ -17,7 +17,7 @@
         <NPerros :selectedPoint="selectedPoint" @close="cerrar"/>
       </div>
       <div v-if="toggleModal==2" id="defaultModal" class="fixed overflow-x-hidden overflow-y-auto inset-0 flex justify-center items-center z-20">
-        <PerrosRadio @close="cerrar"/>
+        <PerrosRadio :selectedPoint="selectedPoint" @close="cerrar"/>
       </div>
     </div>
     
@@ -60,6 +60,7 @@ export default {
             latitude: null, // Datos para el nuevo punto
             longitude: null,
             points: [], // Arreglo de puntos en el lado del cliente
+            //points2: [], // Arreglo de puntos para los perros 
             name: "",
             selectedPoint: {}, // Punto que se pasa a componente NPerros
         };
@@ -123,6 +124,34 @@ export default {
 
 
       },
+      
+      async getPoints(map){
+        try {
+          //se llama el servicio 
+          let response = await this.$axios.get("http://localhost:8080/dogs");
+          let dataPoints = response.data;
+          //Se itera por los puntos
+          dataPoints.forEach(point => {
+
+            //Se crea un marcador por cada punto
+            let p =[point.latitude, point.longitude]
+            let marker = L.marker(p, {icon:myIcon}) //se define el ícono del marcador
+            .bindPopup(point.name) //Se agrega un popup con el nombre
+            .on('click', (e) => this.recuperarPunto(e));
+
+            //Se agrega a la lista
+            this.points.push(marker);
+          });
+
+          //Los puntos de la lista se agregan al mapa
+          this.points.forEach(p=>{
+            p.addTo(map)
+          })
+        } catch (error) {
+          console.log('error', error); 
+        }
+      },
+
       dataFromChild(value){
         this.toggleModal = value
       },
@@ -136,7 +165,8 @@ export default {
         let long = selectedLatlng.lng;
 
         for(let p of this.points){
-          console.log(p.id)
+          //console.log(p.id)
+          console.log(this.point.selectedPoint)
           if( p.latitude == lat && p.longitude == long ){
             this.selectedPoint = p;
             return;
@@ -177,14 +207,14 @@ export default {
 
       //   marker.addTo(this.mymap);
       // });
-      
-
+     
       this.mymap = L.map("principalmap").setView([-33.456, -70.648], 7);
+
       // Se definen los mapas de bits de OSM
       L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
         attribution:
             '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-        maxZoom: 10,
+        maxZoom: 15,
       }).addTo(this.mymap);
 
       this.mymap.on("click", function (e) {
@@ -192,11 +222,15 @@ export default {
         _this.longitude = e.latlng.lng;
       });
 
+      //Se agregan los puntos mediante llamada al servicio
+      this.getPoints(this.mymap);
+      
       // añadir regiones
       // hacer llamada para obtenerlas
       // L.geoJSON(this.myjson).addTo(this.mymap);
 
     },
+    
     components: { PerrosRegion, NPerros, PerrosRadio, PrincipalWithOpacity },
 }
 </script>

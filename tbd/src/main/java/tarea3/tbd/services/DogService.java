@@ -76,4 +76,16 @@ public class DogService {
 
         return dogRepository.getNNearDogs(dogId, n);
     }
+
+    /**
+     * Obtener los N perros más cercanos a un perro seleccionado.
+     * @return
+     */
+    @GetMapping("/dogs/rneardogs")
+    public List<Dog> getRNearDogs(@RequestParam int dogId, @RequestParam int r){
+
+        return dogRepository.getRNearDogs(dogId, r);
+    }
+        
+                                    
 }
