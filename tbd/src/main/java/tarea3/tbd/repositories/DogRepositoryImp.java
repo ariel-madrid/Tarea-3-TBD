@@ -39,17 +39,17 @@ public class DogRepositoryImp implements DogRepository {
     @Override
     public Dog createDog(Dog dog) {
         try(Connection conn = sql2o.open()){
-            String query = "INSERT INTO dog (id, name, location, latitude, longitude) " +
-            "VALUES (:id, :dogName, ST_GeomFromText(:point, 4326), :latitude, :longitude)";
+            String query = "INSERT INTO dog (id, name, location, latitude, longitude, cod_regi) " +
+            "VALUES (:id, :dogName, ST_GeomFromText(:point, 4326), :latitude, :longitude, :cod_regi)";
 
             String point = "POINT("+dog.getLongitude()+" "+dog.getLatitude()+")";
             int insertedId = (int) conn.createQuery(query, true)
                     .addParameter("id", dog.getId())
                     .addParameter("dogName", dog.getName())
                     .addParameter("point", point)
-                    .addParameter("cod_regi", dog.getCodRegi())
                     .addParameter("latitude", dog.getLatitude())
                     .addParameter("longitude", dog.getLongitude())
+                    .addParameter("cod_regi", dog.getCodRegi())
                     .executeUpdate().getKey();
             dog.setId(insertedId);
             return dog;    
