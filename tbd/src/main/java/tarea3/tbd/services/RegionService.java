@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class RegionService {
 
@@ -25,16 +27,16 @@ public class RegionService {
         this.regionRepository = regionRepository;
     }
 
-    @GetMapping("/regions")
+    @RequestMapping(value = "/regions", method = RequestMethod.GET)
     public List<Region> getAllRegions() {
         System.out.println("getAllRegions()");
         try {
             List<Region> regions = regionRepository.getAllRegions();
-            System.out.println("1");
-            for (Region r : regions) {
-                System.out.println("ID: " + r.getId());
-            }
-            System.out.println("2");
+            //System.out.println("1");
+            //for (Region r : regions) {
+            //    System.out.println("ID: " + r.getId());
+            //}
+            //System.out.println("2");
             return regions;
         } catch (Exception e) {
             System.out.println("Error :" + e.getMessage());

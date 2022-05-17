@@ -9,13 +9,15 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class DogService {
 
@@ -53,12 +55,21 @@ public class DogService {
         return String.format("Tienes %s perros!!", total);
     }
 
-    @PostMapping("/dogs")
+    /* @PostMapping("/nuevodog")
     @ResponseBody
     public Dog createDog(@RequestBody Dog dog){
         Dog result = dogRepository.createDog(dog);
         return result;
-    }
+    } */
+
+     //Crear una nueva habilidad (Metodo POST)
+     @RequestMapping(value = "/nuevodog", method=RequestMethod.POST)
+     public Dog createDog(@RequestBody Dog dog) 
+     {  
+        System.out.println(dog.getName());
+        return dogRepository.createDog(dog);
+        
+     }
 
 
     /**
