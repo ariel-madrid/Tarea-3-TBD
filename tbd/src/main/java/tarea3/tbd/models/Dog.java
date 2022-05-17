@@ -8,6 +8,7 @@ public class Dog {
     private String name;
     private double longitude;
     private double latitude;
+    private double cod_regi;
     //private PGgeometry location;
 
     public Integer getId() {
@@ -21,6 +22,16 @@ public class Dog {
     public void setLocation(PGgeometry location) {
         this.location = location;
     } */
+
+    public void setCodRegi(double cod_regi)
+    {
+        this.cod_regi = cod_regi;
+    }
+
+    public double getCodRegi()
+    {
+        return this.cod_regi;
+    }
 
     public double getLatitude() {
         return latitude;

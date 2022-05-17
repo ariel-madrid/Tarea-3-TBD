@@ -1,8 +1,9 @@
 <template>
-    <div class="grid grid-cols-1 bg-white shadow-sm p-5 rounded w-80 ml-2 border border-gray-200 h-64 place-content-center">
+    <div class="grid grid-cols-1 bg-white shadow-sm p-5 rounded w-80 ml-2 border border-gray-200 h-full w-max place-content-center mb-40">
         
         <!-- This example requires Tailwind CSS v2.0+ -->
         <div class="relative inline-block text-left">
+            <div class = "mb-10" id="mapid5"></div>
             <div>
                 <button @click="showCombobox" type="button" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500" id="menu-button">
                 Seleccionar Región
@@ -11,19 +12,16 @@
                 </svg>
                 </button>
             </div>
-            <div v-if="combobox" class="origin-top-right absolute right-7 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" tabindex="-1">
+            <div v-if="combobox" class="origin-top-right right-12 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" tabindex="-1">
                 <div class="py-1" role="none">
-                <button @click="getRegions(region)" class="w-full text-gray-700 block px-4 py-2 text-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500" 
+                <button @click="filtrarRegion(region)" class="w-full text-gray-700 block px-4 py-2 text-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500" 
                         v-for="region in regions" :key="region.gid">
                         {{ region.nom_reg }}
                 </button>
                 </div>
             </div>
         </div>
-
-        <div class="mt-10 flex justify-center">
-            <p>{{ `Hay ${nPerros} perros en ${regionSeleccionada}` }}</p>
-        </div>
+        
 
         <button @click="emit" class="bg-blue-500 rounded mt-10 w-full text-gray-700 block px-4 py-2 text-sm hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">Volver</button>
 
@@ -40,7 +38,9 @@ export default {
             nPerros: 0,
             combobox: false,
             regions: [],
-            value: false
+            value: false,
+            dogs:[],
+            perroFiltrado: []
         };
     },
     methods: {
@@ -59,8 +59,24 @@ export default {
         {
             this.$emit('close', true)
         },
-        getRegions(region){
-            alert(region.nom_reg)
+        async filtrarRegion(region){
+            this.combobox = false
+
+
+            let perros = await this.$axios.get("http://localhost:8080/dogs")
+            perros = perros.data
+            
+            for (let i = 0; i < perros.length; i++)
+            {
+                perros[i].codRegi = region.cod_regi 
+
+                this.perroFiltrado = await this.$axios.post("http://localhost:8080/intersection",perros[i]);
+                console.log(this.perroFiltrado.data)
+
+                //Guardar perros en un arreglo, los que hacen match
+            }
+
+            //Que se añadan los marcadores.
         }
     },
     mounted: async function(){
@@ -73,7 +89,14 @@ export default {
             catch(e){
                 console.log(e)
             }
+
+            this.mymap = L.map("mapid5").setView([-33.456, -70.648], 7);
+            //Se definen los mapas de bits de OSM
+            L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
+            attribution:
+                '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 10,
+            }).addTo(this.mymap);
         }
 }
 </script>
-

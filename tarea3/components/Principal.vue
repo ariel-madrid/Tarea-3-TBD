@@ -63,7 +63,8 @@ export default {
             //points2: [], // Arreglo de puntos para los perros 
             name: "",
             selectedPoint: {}, // Punto que se pasa a componente NPerros,
-            puntos: []
+            puntos: [],
+            cod_regi: null
         };
     },
     methods: {
@@ -74,9 +75,10 @@ export default {
         // realizar llamada para crear un nuevo perro
 
         let newPoint = { 
-        name: this.name,
-        latitude: this.latitude,
-        longitude: this.longitude,
+          name: this.name,
+          latitude: this.latitude,
+          longitude: this.longitude,
+          cod_regi: this.cod_regi
         };
         try {
           let response = await this.$axios.get("http://localhost:8080/dogs");
@@ -94,6 +96,7 @@ export default {
           if (flag == 0) {
             try {
               newPoint.id = count+1;
+              alert(newPoint.latitude+" "+newPoint.longitude)
               await this.$axios
                 .post("http://localhost:8080/nuevodog", newPoint)
                 .then((res) => res.data)
@@ -198,6 +201,7 @@ export default {
       this.mymap.on("click", function (e) {
         _this.latitude = e.latlng.lat;
         _this.longitude = e.latlng.lng;
+        console.log(e)
       });
 
       //Se agregan los puntos mediante llamada al servicio

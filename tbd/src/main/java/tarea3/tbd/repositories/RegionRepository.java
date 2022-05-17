@@ -7,4 +7,5 @@ public interface RegionRepository {
     public List<Region> getAllRegions();
     public Region createRegion(Region region);
     public String getJson();
+    public List<Dog> intersect(Dog dog);
 }

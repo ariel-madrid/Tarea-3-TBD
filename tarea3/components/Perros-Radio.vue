@@ -1,6 +1,5 @@
 <template>
     <div class="grid grid-cols-1 bg-white shadow-sm p-5 rounded ml-2 border border-gray-200 place-content-center">
-     
 
         <div class="mt-10 flex flex-col justify-center">
             <p>{{ message }}</p>

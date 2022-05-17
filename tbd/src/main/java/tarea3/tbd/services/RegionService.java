@@ -1,5 +1,6 @@
 package tarea3.tbd.services;
 
+import tarea3.tbd.repositories.DogRepository;
 import tarea3.tbd.repositories.RegionRepository;
 import tarea3.tbd.models.*;
 
@@ -22,7 +23,7 @@ import java.util.List;
 public class RegionService {
 
     private RegionRepository regionRepository;
-
+    private DogRepository dogRepository;
     RegionService(RegionRepository regionRepository) {
         this.regionRepository = regionRepository;
     }
@@ -56,6 +57,20 @@ public class RegionService {
     public Region createRegion(@RequestBody Region region) {
         Region result = regionRepository.createRegion(region);
         return result;
+    }
+
+
+    @PostMapping(value = "/intersection")
+    @ResponseBody
+    public List<Dog> getIntersection(@RequestBody Dog dog){
+        try {
+            List<Dog> value = regionRepository.intersect(dog);
+            return value;
+        } catch (Exception e) {
+            System.out.println("Error :" + e.getMessage());
+            return null;
+        }
+
     }
 
 }

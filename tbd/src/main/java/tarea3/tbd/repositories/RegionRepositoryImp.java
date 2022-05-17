@@ -32,7 +32,7 @@ public class RegionRepositoryImp implements RegionRepository {
     @Override
     public List<Region> getAllRegions() {
         try(Connection conn = sql2o.open()){
-            final String query = "SELECT nom_reg FROM division_regional GROUP BY nom_reg;";
+            final String query = "SELECT nom_reg, cod_regi FROM division_regional GROUP BY nom_reg, cod_regi;";
             return conn.createQuery(query)
                     .executeAndFetch(Region.class);
         } catch (Exception e) {
@@ -74,5 +74,20 @@ public class RegionRepositoryImp implements RegionRepository {
         
     }
 
-
+    @Override
+    public List<Dog> intersect(Dog dog) {
+        try(Connection conn = sql2o.open()){
+            
+            String point = "POINT("+dog.getLongitude()+" "+dog.getLatitude()+")";
+           
+            String query = "SELECT d.id, d.name, st_x(st_astext( location)) AS longitude, st_y(st_astext(location)) AS latitude "+
+                            "FROM division_regional as dr, dog as d  "+
+                            "WHERE dr.cod_regi = "+dog.getCodRegi()+" and st_intersects(geom, ST_GeomFromText('"+point+"')) and d.id ="+dog.getId()+";";
+            System.out.println(query);
+            return conn.createQuery(query).executeAndFetch(Dog.class);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
 }
