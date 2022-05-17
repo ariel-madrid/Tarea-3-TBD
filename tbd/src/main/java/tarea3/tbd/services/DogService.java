@@ -71,9 +71,10 @@ public class DogService {
      * @return
      */
     @GetMapping("/dogs/nneardogs")
-    public List<Dog> getNNearDogs(@RequestParam int dogId, 
-                                  @RequestParam int n){
-
+    public List<Dog> getNNearDogs(@RequestParam("dogId") int dogId, 
+                                  @RequestParam("n") int n){
+        
+        System.out.println(dogId + " " + n);
         return dogRepository.getNNearDogs(dogId, n);
     }
 
