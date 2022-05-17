@@ -62,7 +62,8 @@ export default {
             points: [], // Arreglo de puntos en el lado del cliente
             //points2: [], // Arreglo de puntos para los perros 
             name: "",
-            selectedPoint: {}, // Punto que se pasa a componente NPerros
+            selectedPoint: {}, // Punto que se pasa a componente NPerros,
+            puntos: []
         };
     },
     methods: {
@@ -102,9 +103,6 @@ export default {
             console.log("error", error);
           }
         }
-        
-  
-        
       } catch (error) {
         console.log("error", error);
       }
@@ -118,11 +116,10 @@ export default {
 
       marker.addTo(this.mymap);
 
-
       // this.message = `${this.name} fue creado con éxito`;
       this.name = "";
 
-
+      location.reload()
       },
       
       async getPoints(map){
@@ -130,6 +127,7 @@ export default {
           //se llama el servicio 
           let response = await this.$axios.get("http://localhost:8080/dogs");
           let dataPoints = response.data;
+          this.puntos = dataPoints
           //Se itera por los puntos
           dataPoints.forEach(point => {
 
@@ -138,7 +136,6 @@ export default {
             let marker = L.marker(p, {icon:myIcon}) //se define el ícono del marcador
             .bindPopup(point.name) //Se agrega un popup con el nombre
             .on('click', (e) => this.recuperarPunto(e));
-
             //Se agrega a la lista
             this.points.push(marker);
           });
@@ -164,9 +161,8 @@ export default {
         let lat =  selectedLatlng.lat;
         let long = selectedLatlng.lng;
 
-        for(let p of this.points){
-          //console.log(p.id)
-          console.log(this.point.selectedPoint)
+        for(let p of this.puntos){
+          
           if( p.latitude == lat && p.longitude == long ){
             this.selectedPoint = p;
             return;
@@ -188,25 +184,6 @@ export default {
     },
     mounted(){
       let _this = this;
-
-      // Realizar llamada para obtener todos los perros aquí
-      // let dogs = llamar servicio
-      // Añadir un marcador por cada perro
-      // dogs.forEach((dog) => {
-      //   let p = [newPoint.latitude, newPoint.longitude];
-      //   let marker = L.marker(p, { UID: newPoint.id, icon: myIcon }) //se define el ícono del marcador
-      //     .bindPopup(newPoint.name)
-      //     .on('click', (e) => {
-              // esta funcion sirve para los N-perros para seleccionar un perro
-      //       this.selectedLatlng = e.latlng;
-      //       console.log(this.selectedLatlng);
-            
-
-      //     }
-      //     ); //Se agrega un popup con el nombre
-
-      //   marker.addTo(this.mymap);
-      // });
      
       this.mymap = L.map("principalmap").setView([-33.456, -70.648], 7);
 
@@ -224,10 +201,6 @@ export default {
 
       //Se agregan los puntos mediante llamada al servicio
       this.getPoints(this.mymap);
-      
-      // añadir regiones
-      // hacer llamada para obtenerlas
-      // L.geoJSON(this.myjson).addTo(this.mymap);
 
     },
     
