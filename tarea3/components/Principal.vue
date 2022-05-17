@@ -68,58 +68,59 @@ export default {
     },
     methods: {
       async crearPerro(){
-      //Crear un nuevo punto
-      // this.message = "";
+        //Crear un nuevo punto
+        // this.message = "";
 
-      // realizar llamada para crear un nuevo perro
+        // realizar llamada para crear un nuevo perro
 
-      let newPoint = { 
+        let newPoint = { 
         name: this.name,
         latitude: this.latitude,
         longitude: this.longitude,
-      };
-      try {
-        let response = await this.$axios.get("http://localhost:8080/dogs");
-        this.temp = response.data;
-        var flag = 0;
-        var count = 0;
-        for (var i = 0; i < this.temp.length; i++) {
-          if (this.temp[i].name === newPoint.name) {
-            alert("Ya existe un perro con este nombre en la base de datos");
-            i = this.temp.length;
-            flag = 1;
+        };
+        try {
+          let response = await this.$axios.get("http://localhost:8080/dogs");
+          this.temp = response.data;
+          var flag = 0;
+          var count = 0;
+          for (var i = 0; i < this.temp.length; i++) {
+            if (this.temp[i].name === newPoint.name) {
+              alert("Ya existe un perro con este nombre en la base de datos");
+              i = this.temp.length;
+              flag = 1;
+            }
+            count++;
           }
-          count++;
-        }
-        if (flag == 0) {
-          try {
-            newPoint.id = count+1;
-            await this.$axios
-              .post("http://localhost:8080/nuevodog", newPoint)
-              .then((res) => res.data)
-              .catch((res) => res);
+          if (flag == 0) {
+            try {
+              newPoint.id = count+1;
+              await this.$axios
+                .post("http://localhost:8080/nuevodog", newPoint)
+                .then((res) => res.data)
+                .catch((res) => res);
 
-          } catch (error) {
-            console.log("error", error);
+            } catch (error) {
+              console.log("error", error);
+            }
           }
+        } catch (error) {
+          console.log("error", error);
         }
-      } catch (error) {
-        console.log("error", error);
-      }
 
-      this.points.push(newPoint);
+        this.points.push(newPoint);
 
-      let p = [newPoint.latitude, newPoint.longitude];
-      let marker = L.marker(p, { icon: myIcon }) //se define el ícono del marcador
+        let p = [newPoint.latitude, newPoint.longitude];
+        let marker = L.marker(p, { icon: myIcon }) //se define el ícono del marcador
           .bindPopup(newPoint.name)
           .on('click', (e) => this.recuperarPunto(e)); //Se agrega un popup con el nombre
 
-      marker.addTo(this.mymap);
+        marker.addTo(this.mymap);
 
-      // this.message = `${this.name} fue creado con éxito`;
-      this.name = "";
+        // this.message = `${this.name} fue creado con éxito`;
+        this.name = "";
 
-      location.reload()
+        alert("Creando perro...")
+        location.reload()
       },
       
       async getPoints(map){
@@ -130,7 +131,7 @@ export default {
           this.puntos = dataPoints
           //Se itera por los puntos
           dataPoints.forEach(point => {
-
+ 
             //Se crea un marcador por cada punto
             let p =[point.latitude, point.longitude]
             let marker = L.marker(p, {icon:myIcon}) //se define el ícono del marcador
@@ -200,7 +201,7 @@ export default {
       });
 
       //Se agregan los puntos mediante llamada al servicio
-      this.getPoints(this.mymap);
+      this.getPoints(this.mymap); 
 
     },
     
