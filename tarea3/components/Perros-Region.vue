@@ -4,6 +4,7 @@
         <!-- This example requires Tailwind CSS v2.0+ -->
         <div class="relative inline-block text-left">
             <div class = "mb-10" id="mapid5"></div>
+            <p class="mb-5">La cantidad de perros en la region seleccionada es de: {{contador}}</p>
             <div>
                 <button @click="showCombobox" type="button" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500" id="menu-button">
                 Seleccionar Región
@@ -30,6 +31,11 @@
 
 <script>
 import axios from "axios";
+var icon = require("leaflet/dist/images/marker-icon.png"); 
+var LeafIcon = L.Icon.extend({
+  options: { iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [-3, -41] },
+});
+var myIcon = new LeafIcon({ iconUrl: icon });
 
 export default {
     data() {
@@ -40,7 +46,9 @@ export default {
             regions: [],
             value: false,
             dogs:[],
-            perroFiltrado: []
+            perroFiltrado: [],
+            perrosMatch: [],
+            contador: 0
         };
     },
     methods: {
@@ -71,20 +79,37 @@ export default {
                 perros[i].codRegi = region.cod_regi 
 
                 this.perroFiltrado = await this.$axios.post("http://localhost:8080/intersection",perros[i]);
-                console.log(this.perroFiltrado.data)
+                this.perroFiltrado = this.perroFiltrado.data
+                //console.log(this.perroFiltrado)
 
                 //Guardar perros en un arreglo, los que hacen match
+                if(this.perroFiltrado[0] != undefined){
+                    this.perrosMatch.push(this.perroFiltrado[0])
+                    this.contador = this.contador + 1;
+                }
+                
+
+                
             }
+            //console.log(this.perrosMatch)
+            
 
             //Que se añadan los marcadores.
+            this.perrosMatch.forEach(perro => {
+                let p = [perro.latitude, perro.longitude]
+                let marker = L.marker(p, { icon: myIcon }) //se define el ícono del marcador
+                .bindPopup(perro.name)
+
+                marker.addTo(this.mymap);
+            });
+            this.mymap.setView([this.perrosMatch[0].latitude, this.perrosMatch[0].longitude], 7);
         }
     },
     mounted: async function(){
             try{
                 let response = await this.$axios.get("http://localhost:8080/regions");
                 this.regions = response.data
-                console.log(this.regions)
-
+               
             }
             catch(e){
                 console.log(e)
@@ -95,7 +120,7 @@ export default {
             L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
             attribution:
                 '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-            maxZoom: 10,
+            maxZoom: 15,
             }).addTo(this.mymap);
         }
 }
