@@ -44,6 +44,7 @@ export default {
         };
     },
     methods: {
+<<<<<<< Updated upstream
         showCombobox()
         {
             if (this.combobox == true)
@@ -53,6 +54,19 @@ export default {
             else 
             {
                 this.combobox=true
+=======
+        async getNNearDogs(){
+            this.dogId = this.selectedPoint.id;
+            console.log(this.selectedPoint.id)
+            try {
+                let response = await axios.get("http://localhost:8080/dogs/nneardogs", {
+                    params: {dogId: this.dogId, n: this.n}
+                });
+
+                } catch (error) {
+                console.log('error', error); 
+                this.message = 'Ocurrió un error'
+>>>>>>> Stashed changes
             }
         },
         emit()

@@ -39,14 +39,17 @@ public class DogRepositoryImp implements DogRepository {
     @Override
     public Dog createDog(Dog dog) {
         try(Connection conn = sql2o.open()){
-            String query = "INSERT INTO dog (id, name, location, cod_regi) " +
-            "VALUES (:id, :dogName, ST_GeomFromText(:point, 4326), :cod_regi)";
+            String query = "INSERT INTO dog (id, name, location, latitude, longitude) " +
+            "VALUES (:id, :dogName, ST_GeomFromText(:point, 4326), :latitude, :longitude)";
+
             String point = "POINT("+dog.getLongitude()+" "+dog.getLatitude()+")";
             int insertedId = (int) conn.createQuery(query, true)
                     .addParameter("id", dog.getId())
                     .addParameter("dogName", dog.getName())
                     .addParameter("point", point)
                     .addParameter("cod_regi", dog.getCodRegi())
+                    .addParameter("latitude", dog.getLatitude())
+                    .addParameter("longitude", dog.getLongitude())
                     .executeUpdate().getKey();
             dog.setId(insertedId);
             return dog;    
@@ -86,12 +89,18 @@ public class DogRepositoryImp implements DogRepository {
     }
 
     @Override
-    public List<Dog> getRNearDogs(int dogId, int r){
-        final String dogQuery = "(SELECT * FROM dogs WHERE id = " + dogId + ") as requested_dog";
-        final String query = "SELECT ST_Distance(requested_dog.geom, dogs.geom) as distance" +
-                             "FROM " + dogQuery + ", dogs" +
-                             "ORDER BY distance" + 
-                             "LIMIT " + r;
+    public List<Dog> getRNearDogs(Dog dog, int r){
+        
+        String point = "("+dog.getLongitude()+" "+dog.getLatitude()+")";
+
+        final String query = "SELECT * FROM dog"+
+                                " WHERE ST_DWithin("+ 
+                                    " ST_MakePoint(longitude, latitude)::geography,"+
+                                    " ST_MakePoint"+ point + "::geography,"+
+                                    r + 
+                             ") AND id != " + dog.getId() + ";";
+        
+                             System.out.println(query);
 
         try(Connection conn = sql2o.open()){
             return conn.createQuery(query)

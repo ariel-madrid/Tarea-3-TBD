@@ -96,7 +96,12 @@ export default {
           if (flag == 0) {
             try {
               newPoint.id = count+1;
+<<<<<<< Updated upstream
               alert(newPoint.latitude+" "+newPoint.longitude)
+=======
+              newPoint.lat = newPoint.latitude;
+              newPoint.long = newPoint.longitude;
+>>>>>>> Stashed changes
               await this.$axios
                 .post("http://localhost:8080/nuevodog", newPoint)
                 .then((res) => res.data)

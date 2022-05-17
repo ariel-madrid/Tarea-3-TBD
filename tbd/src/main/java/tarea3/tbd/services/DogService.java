@@ -82,9 +82,9 @@ public class DogService {
      * @return
      */
     @GetMapping("/dogs/rneardogs")
-    public List<Dog> getRNearDogs(@RequestParam int dogId, @RequestParam int r){
+    public List<Dog> getRNearDogs(@RequestParam Dog dog, @RequestParam int r){
 
-        return dogRepository.getRNearDogs(dogId, r);
+        return dogRepository.getRNearDogs(dog, r);
     }
         
                                     

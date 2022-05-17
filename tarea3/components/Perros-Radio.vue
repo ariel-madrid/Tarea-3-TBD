@@ -55,13 +55,11 @@ export default {
     },
     methods: {
         async getRNearDogs(){
-            this.dogId = this.selectedPoint.id;
+            console.log(this.selectedPoint);
         
             try {
-                let response = await axios.get("http://localhost:8080/dogs/rneardogs", {
-                    params: {dogId: this.dogId, r: this.r}
-                });
-                
+                let response = await axios.get("http://localhost:8080/dogs/rneardogs", this.selectedPoint, this.r)
+                    
                 } catch (error) {
                 console.log('error', error);
                 this.message = 'Ocurrió un error'
