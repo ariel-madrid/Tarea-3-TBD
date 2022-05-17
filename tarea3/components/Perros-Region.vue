@@ -14,8 +14,8 @@
             <div v-if="combobox" class="origin-top-right absolute right-7 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" tabindex="-1">
                 <div class="py-1" role="none">
                 <button @click="getRegions(region)" class="w-full text-gray-700 block px-4 py-2 text-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500" 
-                        v-for="region in regions" :key="region.id">
-                        {{ region.name }}
+                        v-for="region in regions" :key="region.gid">
+                        {{ region.nom_reg }}
                 </button>
                 </div>
             </div>
@@ -39,7 +39,7 @@ export default {
             regionSeleccionada: "(región no seleccionada)",
             nPerros: 0,
             combobox: false,
-            regions: [{name:"Region Metropolitana", id:1},{name:"Tarapacá", id:2},{name:"Antofagasta", id:3},{name:"Atacama y Coquimbo", id:4}	],
+            regions: [],
             value: false
         };
     },
@@ -55,22 +55,25 @@ export default {
                 this.combobox=true
             }
         },
-        async getRegions(value)
-        {
-            this.regionSeleccionada = value.name
-
-            //Aqui debemos hacer un get region
-            alert(value.id)
-            this.showCombobox()
-
-            // Setear respuesta de número de perros
-            this.nPerros = 3333333;
-        },
         emit()
         {
             this.$emit('close', true)
+        },
+        getRegions(region){
+            alert(region.nom_reg)
         }
-    }
+    },
+    mounted: async function(){
+            try{
+                let response = await this.$axios.get("http://localhost:8080/regions");
+                this.regions = response.data
+                console.log(this.regions)
+
+            }
+            catch(e){
+                console.log(e)
+            }
+        }
 }
 </script>
 
