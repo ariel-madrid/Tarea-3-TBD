@@ -74,21 +74,20 @@ public class DogRepositoryImp implements DogRepository {
     @Override
     public List<Dog> getNNearDogs(int dogId, int n) {
         final String dogQuery = "(SELECT * FROM dog WHERE id = " + dogId + ") as requested_dog ";
-        final String query = "SELECT dog.id, dog.name, ST_Distance(requested_dog.location, dog.location) as distance " +
+        final String query = "SELECT dog.id, dog.name, ST_Distance(requested_dog.location::geography, dog.location::geography) as distance " +
                              "FROM " + dogQuery + ", dog " +
                              "WHERE dog.id != requested_dog.id " +
                              "ORDER BY distance " + 
                              "LIMIT " + n + ";";
-
-                             System.out.println(query);
 
         try(Connection conn = sql2o.open()){
             return conn.createQuery(query)
                     .executeAndFetch(Dog.class);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return null;
         }
+
+        return null;
     }
 
     @Override

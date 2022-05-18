@@ -74,7 +74,6 @@ public class DogService {
     public List<Dog> getNNearDogs(@RequestParam("dogId") int dogId, 
                                   @RequestParam("n") int n){
         
-        System.out.println(dogId + " " + n);
         return dogRepository.getNNearDogs(dogId, n);
     }
 
