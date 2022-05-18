@@ -106,7 +106,7 @@ public class DogRepositoryImp implements DogRepository {
                                     " ST_MakePoint"+ point + "::geography,"+
                                     dog.getRadio() + 
                                     ") AND id != " + dog.getId() + ";";
-        
+            
             System.out.println(query);
 
             return conn.createQuery(query).executeAndFetch(Dog.class);
