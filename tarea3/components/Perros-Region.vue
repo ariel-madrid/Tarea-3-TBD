@@ -72,6 +72,7 @@ export default {
             this.contador = 0
             this.combobox = false
 
+            this.perrosMatch = [] 
 
             let perros = await this.$axios.get("http://localhost:8080/dogs")
             perros = perros.data
