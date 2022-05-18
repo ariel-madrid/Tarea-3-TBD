@@ -15,7 +15,7 @@ Integrantes:
 <li>Nicolas Henriquez</li>
 <li>Marcelo Guzman</li>
 <li>Bryan Salgado</li>
-</ul><br>
+</ul>
 Sistema Operativo: Windows 10 PRO Editor de codigo: Visual studio code
 
 Pasos para utilizar la App Web:
