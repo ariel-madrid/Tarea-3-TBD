@@ -79,6 +79,10 @@ export default {
 
             this.perrosMatch = [] 
 
+            this.marcadores.forEach(marcador => {
+                    this.mymap.removeLayer(marcador)
+            })
+
             let perros = await this.$axios.get("http://localhost:8080/dogs")
             perros = perros.data
             
@@ -115,7 +119,7 @@ export default {
                     marker.addTo(this.mymap);
                     this.marcadores.push(marker)
                 });
-                this.mymap.setView([this.perrosMatch[0].latitude, this.perrosMatch[0].longitude], 8);
+                this.mymap.setView([this.perrosMatch[0].latitude, this.perrosMatch[0].longitude], 6);
             }
             this.spinner = false
         }
