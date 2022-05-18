@@ -16,7 +16,7 @@
                   : `N: ${this.n} perros` 
                }}
             </p>
-            <button class="bg-blue-500 rounded mt-2 w-full text-gray-700 py-2" 
+            <button class="mt-5 ml-5 mr-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600" 
                     @click="getNNearDogs()">
                     Obtener resultados
             </button>
@@ -43,7 +43,7 @@
 
             
             <button @click="emit" 
-                    class="bg-blue-500 rounded mt-2 w-full text-gray-700 block px-4 py-2 text-sm hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+                    class="mt-5 ml-5 mr-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600">
                     Volver
             </button>
 

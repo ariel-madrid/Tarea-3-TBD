@@ -21,10 +21,14 @@
                 </button>
                 </div>
             </div>
-        </div>
-        
 
-        <button @click="emit" class="bg-blue-500 rounded mt-10 w-full text-gray-700 block px-4 py-2 text-sm hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">Volver</button>
+            <div v-if="spinner" class="flex justify-center mt-5">
+                <div style="border-top-color:transparent"
+                    class="w-8 h-8 border-4 border-blue-400 border-solid rounded-full animate-spin"></div>
+            </div>
+        </div>
+    
+        <button @click="emit" class="bg-blue-500 rounded mt-5 w-full text-gray-700 block px-4 py-2 text-sm hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">Volver</button>
 
     </div>
 </template>
@@ -49,7 +53,8 @@ export default {
             perroFiltrado: [],
             perrosMatch: [],
             contador: 0,
-            marcadores: []
+            marcadores: [],
+            spinner: false
         };
     },
     methods: {
@@ -90,6 +95,7 @@ export default {
                     this.perrosMatch.push(this.perroFiltrado[0])
                     this.contador = this.contador + 1;
                 }
+                this.spinner = true
             }
             
             if (this.contador === 0)
@@ -111,6 +117,7 @@ export default {
                 });
                 this.mymap.setView([this.perrosMatch[0].latitude, this.perrosMatch[0].longitude], 8);
             }
+            this.spinner = false
         }
     },
     mounted: async function(){
