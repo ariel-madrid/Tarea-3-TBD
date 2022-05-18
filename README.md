@@ -8,13 +8,14 @@
 SELECT UpdateGeometrySRID('division_regional', 'geom', 3857);</code> de forma que el SRID de Leaflet y la tabla dentro de la base de datos sea coherente.
 
 Integrantes:
-
-Ariel Argomedo
-Israel Guzman
-Ramon Parra
-Nicolas Henriquez
-Marcelo Guzman
-Bryan Salgado
+<ul>
+<li>Ariel Argomedo</li>
+<li>Israel Guzman</li>
+<li>Ramon Parra</li>
+<li>Nicolas Henriquez</li>
+<li>Marcelo Guzman</li>
+<li>Bryan Salgado</li>
+</ul><br>
 Sistema Operativo: Windows 10 PRO Editor de codigo: Visual studio code
 
 Pasos para utilizar la App Web:
