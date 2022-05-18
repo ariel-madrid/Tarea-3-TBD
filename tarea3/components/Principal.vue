@@ -80,35 +80,47 @@ export default {
           longitude: this.longitude,
           cod_regi: this.cod_regi
         };
-        try {
-          let response = await this.$axios.get("http://localhost:8080/dogs");
-          this.temp = response.data;
-          var flag = 0;
-          var count = 0;
-          for (var i = 0; i < this.temp.length; i++) {
-            if (this.temp[i].name === newPoint.name) {
-              alert("Ya existe un perro con este nombre en la base de datos");
-              i = this.temp.length;
-              flag = 1;
-            }
-            count++;
-          }
-          if (flag == 0) {
+        if (newPoint.name !== ""){
+          if ((newPoint.latitude != null && newPoint.longitude != null)){
             try {
-              newPoint.id = count+1;
-              newPoint.lat = newPoint.latitude;
-              newPoint.long = newPoint.longitude;
-              await this.$axios
-                .post("http://localhost:8080/nuevodog", newPoint)
-                .then((res) => res.data)
-                .catch((res) => res);
+              let response = await this.$axios.get("http://localhost:8080/dogs");
+              this.temp = response.data;
+              var flag = 0;
+              var count = 0;
+              for (var i = 0; i < this.temp.length; i++) {
+                if (this.temp[i].name === newPoint.name) {
+                  alert("Ya existe un perro con este nombre en la base de datos");
+                  return
+                  i = this.temp.length;
+                  flag = 1;
+                }
+                count++;
+              }
+              if (flag == 0) {
+                try {
+                  newPoint.id = count+1;
+                  newPoint.lat = newPoint.latitude;
+                  newPoint.long = newPoint.longitude;
+                  await this.$axios
+                    .post("http://localhost:8080/nuevodog", newPoint)
+                    .then((res) => res.data)
+                    .catch((res) => res);
 
+                } catch (error) {
+                  console.log("error", error);
+                }
+              }
             } catch (error) {
               console.log("error", error);
             }
-          }
-        } catch (error) {
-          console.log("error", error);
+            }else 
+            {
+              alert("Debe posicionar al perro en algun punto del mapa")
+              return
+            }
+        }else{
+          alert("Debe ingresar un nombre de perro")
+          return
         }
 
         this.points.push(newPoint);

@@ -1,5 +1,5 @@
 <template>
-    <div class="grid grid-cols-1 bg-white shadow-sm p-5 rounded w-80 ml-2 border border-gray-200 h-full w-max place-content-center mb-40">
+    <div class="grid grid-cols-1 bg-white shadow-sm p-5 rounded w-80 ml-2 border border-gray-200 w-max place-content-center mb-40">
         
         <!-- This example requires Tailwind CSS v2.0+ -->
         <div class="relative inline-block text-left">
@@ -13,9 +13,9 @@
                 </svg>
                 </button>
             </div>
-            <div v-if="combobox" class="origin-top-right right-12 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" tabindex="-1">
+            <div v-if="combobox" class="origin-top-right right-14 mt-2 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" tabindex="-1">
                 <div class="py-1" role="none">
-                <button @click="filtrarRegion(region)" class="w-full text-gray-700 block px-4 py-2 text-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500" 
+                <button @click="filtrarRegion(region)" class="w-80 text-left w-full text-gray-700 block px-4 py-2 text-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500" 
                         v-for="region in regions" :key="region.gid">
                         {{ region.nom_reg }}
                 </button>
@@ -48,7 +48,8 @@ export default {
             dogs:[],
             perroFiltrado: [],
             perrosMatch: [],
-            contador: 0
+            contador: 0,
+            marcadores: []
         };
     },
     methods: {
@@ -68,6 +69,7 @@ export default {
             this.$emit('close', true)
         },
         async filtrarRegion(region){
+            this.contador = 0
             this.combobox = false
 
 
@@ -87,29 +89,36 @@ export default {
                     this.perrosMatch.push(this.perroFiltrado[0])
                     this.contador = this.contador + 1;
                 }
-                
-
-                
             }
-            //console.log(this.perrosMatch)
             
+            if (this.contador === 0)
+            {
+                alert("No existen perros en la region "+region.nom_reg)
+                this.marcadores.forEach(marcador => {
+                    this.mymap.removeLayer(marcador)
+                })
+            }else 
+            {
+                //Que se añadan los marcadores.
+                this.perrosMatch.forEach(perro => {
+                    let p = [perro.latitude, perro.longitude]
+                    let marker = L.marker(p, { icon: myIcon }) //se define el ícono del marcador
+                    .bindPopup(perro.name)
 
-            //Que se añadan los marcadores.
-            this.perrosMatch.forEach(perro => {
-                let p = [perro.latitude, perro.longitude]
-                let marker = L.marker(p, { icon: myIcon }) //se define el ícono del marcador
-                .bindPopup(perro.name)
-
-                marker.addTo(this.mymap);
-            });
-            this.mymap.setView([this.perrosMatch[0].latitude, this.perrosMatch[0].longitude], 7);
+                    marker.addTo(this.mymap);
+                    this.marcadores.push(marker)
+                });
+                this.mymap.setView([this.perrosMatch[0].latitude, this.perrosMatch[0].longitude], 8);
+            }
         }
     },
     mounted: async function(){
             try{
+                let tmp = 0;
                 let response = await this.$axios.get("http://localhost:8080/regions");
                 this.regions = response.data
-               
+                this.regions = this.regions.filter(region => region.nom_reg != 'Zona sin demarcar')
+                this.regions = this.regions.filter(region => region.nom_reg != null)
             }
             catch(e){
                 console.log(e)
