@@ -3,7 +3,7 @@
         
         <div class="mt-10 flex flex-col justify-center">
             <p>{{ message }}</p>
-            <p> El perro seleccionado es {{ selectedPoint.name }} con id {{ selectedPoint.id }}</p>
+            <p class> El perro seleccionado es {{ selectedPoint.name }} con id {{ selectedPoint.id }}</p>
             <div class = "mb-3 w-full" id="mapid4"></div>
             <label for="nDogs">Seleccione el radio "R" en metros para obtener los perros mas cercanos:</label> 
             <input class="border-solid border-2" 
@@ -14,15 +14,15 @@
                   : `R: ${this.r} metros` 
                }}
             </p> 
-            <p class = "mt-10 mb-0"> La cantidad de perros encontrados de acuerdo al radio seleccionado es: {{contador}}</p>
-            <button class="bg-blue-500 rounded mt-3 w-full text-gray-700 py-2" 
+            <p class = "mt-5 mb-0"> La cantidad de perros encontrados de acuerdo al radio seleccionado es: {{contador}}</p>
+            <button class="mt-5 ml-5 mr-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600" 
                     @click="getRNearDogs()">
-                    Get!
+                    Obtener resultados
             </button>
         </div>
         
         <button @click="emit" 
-                class="bg-blue-500 rounded mt-5 w-full text-gray-700 block px-4 py-2 text-sm hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+                class="mt-5 ml-5 mr-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600">
                 Volver
         </button>
 
@@ -124,7 +124,7 @@ export default {
 
 <style> 
     #mapid4 {
-        width: 400px;
+        width: 550px;
         aspect-ratio: 16/9;
     }
 </style>

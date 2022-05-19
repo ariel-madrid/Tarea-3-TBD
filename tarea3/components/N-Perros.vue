@@ -6,7 +6,7 @@
             <p class="border-solid border-b-4 p-4 border-red-500 mb-2" 
                v-if="this.message">Informaciones: {{message}}</p>
 
-            <p>> El perro seleccionado es {{ selectedPoint.name }} con id {{ selectedPoint.id }}</p>
+            <p> El perro seleccionado es {{ selectedPoint.name }} con id {{ selectedPoint.id }}</p>
             <label for="nDogs">Seleccione la cantidad "N" de perros más cercanos a obtener:</label>
             <input class="border-solid border-2" 
                    v-model="n"
